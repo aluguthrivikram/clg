@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parent Dashboard - KSRMCE</title>
+<style>
+/* --- PRESERVED DESIGN STYLES FROM PORTAL --- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  height: 100vh;
+  /* Shifting Mesh Gradient Background */
+  background: linear-gradient(-45deg, #dfe9f3, #7aa8ff, #7fffd4, #ffffff);
+  background-size: 400% 400%;
+  animation: meshGradient 15s ease infinite;
+  overflow: hidden;
+}
+
+@keyframes meshGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.sidebar {
+  width: 250px;
+  backdrop-filter: blur(70px) saturate(180%);
+  -webkit-backdrop-filter: blur(70px) saturate(180%);
+  background: rgba(255, 255, 255, 0.1);
+  border-right: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 20px;
+  z-index: 10;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.sidebar h2 { color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.2); margin-bottom: 25px; }
+
+.menu div {
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 14px;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.menu div:hover {
+  background: rgba(255, 255, 255, 0.4);
+  transform: translateX(6px);
+  color: #000;
+}
+
+.logout { margin-top: 30px; text-align: center; background: #ff4d4d; color: white; padding: 12px; border-radius: 12px; cursor: pointer; }
+
+.main {
+  flex: 1;
+  padding: 30px;
+  overflow-y: auto;
+  height: 100vh;
+  z-index: 5;
+  width: 100%;
+}
+
+.card {
+  backdrop-filter: blur(60px) saturate(200%);
+  -webkit-backdrop-filter: blur(60px) saturate(200%);
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 30px;
+  padding: 25px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+}
+
+.card h2 { font-size: 18px; text-align: center; color: #222; margin-bottom: 10px; }
+.card p { color: #333; font-size: 14px; margin-bottom: 5px; }
+
+/* --- NEW TABLE & GRID STYLES --- */
+table { width: 100%; border-collapse: collapse; margin-top: 15px; background: rgba(255, 255, 255, 0.3); border-radius: 15px; overflow: hidden; }
+th, td { text-align: left; padding: 14px; border-bottom: 1px solid rgba(0,0,0,0.05); }
+th { background: rgba(0, 0, 0, 0.05); color: #000; font-weight: 700; font-size: 13px; text-transform: uppercase; }
+td { color: #333; font-size: 14px; }
+
+.fee-status.paid { color: #28a745; font-weight: 700; }
+.fee-status.pending { color: #dc3545; font-weight: 700; }
+
+.exam-card { background: white; border-radius: 15px; padding: 15px; margin-top: 10px; border-left: 5px solid #7aa8ff; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+.marks-progress { background: #eee; height: 10px; border-radius: 5px; overflow: hidden; margin-top: 5px; }
+.marks-bar { height: 100%; background: linear-gradient(to right, #4caf50, #8bc34a); }
+
+.hidden { display: none; }
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <h2>Parent Panel</h2>
+  <div class="menu">
+    <div onclick="show('home')">🏠 Child Info</div>
+    <div onclick="show('fees')">💰 Fee Details</div>
+    <div onclick="show('exams')">📅 Exam Schedules</div>
+    <div onclick="show('marks')">📊 Child Marks</div>
+  </div>
+  <div class="logout" onclick="logout()">Logout</div>
+</div>
+
+<div class="main">
+  <div id="home" class="section">
+    <div class="card">
+      <h2>Welcome, Mr/Ms <b id="parentName">---</b></h2>
+      <p style="text-align:center; color: #777;">You are logged in with Roll No: <b id="pRoll">---</b></p>
+      <div style="margin-top:20px;">
+        <p>Child's Name: <b id="studentName">---</b></p>
+        <p>Branch: <b id="studentBranch">---</b></p>
+        <p>Batch: <b id="studentBatch">---</b></p>
+      </div>
+    </div>
+  </div>
+
+  <div id="fees" class="section hidden">
+    <div class="card">
+      <h2>Fee Details & Payment Status</h2>
+      <table>
+        <thead><tr><th>Fee Type</th><th>Academic Year</th><th>Amount (₹)</th><th>Due Date</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Tuition Fee</td><td>2022-23</td><td>₹50,000</td><td>15/07/2022</td><td class="fee-status paid">Paid</td></tr>
+          <tr><td>Tuition Fee</td><td>2023-24</td><td>₹50,000</td><td>15/07/2023</td><td class="fee-status pending">Pending</td></tr>
+          <tr><td>Exam Fee (3-1 Sem)</td><td>2024-25</td><td>₹1,500</td><td>20/12/2024</td><td class="fee-status pending">Pending</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="exams" class="section hidden">
+    <div class="card">
+      <h2>Upcoming Examination Schedules</h2>
+      <div id="examFeed">
+        <div class="exam-card">
+          <p><b>Mid-Term Exam (3-1 Sem)</b></p>
+          <p>Start Date: 25th Nov 2024</p>
+          <p>End Date: 30th Nov 2024</p>
+        </div>
+        <div class="exam-card">
+          <p><b>Semester End Exam (3-1 Sem)</b></p>
+          <p>Start Date: 10th Jan 2025 (Tentative)</p>
+          <p>Note: Regular labs will begin after mids.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="marks" class="section hidden">
+    <div class="card">
+      <h2>Child's Academic Marks</h2>
+      <p><b>Semester: 2-2 Sem</b></p>
+      <div style="margin-top:15px;">
+        <p>Mathematics-IV (C-201): <b style="color:#28a745;">85%</b></p>
+        <div class="marks-progress"><div class="marks-bar" style="width: 85%;"></div></div>
+        <br>
+        <p>Data Structures (C-202): <b style="color:#28a745;">92%</b></p>
+        <div class="marks-progress"><div class="marks-bar" style="width: 92%;"></div></div>
+        <br>
+        <p>Unix Programming (C-203): <b style="color:#dc3545;">72%</b></p>
+        <div class="marks-progress"><div class="marks-bar" style="width: 72%;"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyCHS6YQr6jx3oQwSaoi-CTJBPk6MsCwOvY",
+    authDomain: "clg-web-918e8.firebaseapp.com",
+    projectId: "clg-web-918e8",
+    storageBucket: "clg-web-918e8.firebasestorage.app",
+    messagingSenderId: "284984143990",
+    appId: "1:284984143990:web:010826a68926fc8a21af57",
+    measurementId: "G-XCF4Y79Q0T"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// Use the Roll No saved during login
+const myRoll = localStorage.getItem("roll");
+document.getElementById("pRoll").innerText = myRoll;
+
+// Verify Parent Access
+if(localStorage.getItem("role") !== "parent") window.location.href="index.html";
+
+// Initialization: Load Child Info automatically
+document.getElementById('home').classList.add('active');
+fetchChildInfo();
+
+window.show = (id) => {
+  document.querySelectorAll('.section').forEach(s=>s.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+};
+
+// --- DATA FETCHING LOGIC (FIRESTORE) ---
+async function fetchChildInfo() {
+  if (!myRoll) return;
+
+  // We look for a document in the 'students' collection matching the Roll No
+  const docRef = doc(db, "students", myRoll);
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    const data = docSnap.data();
+    // Populate the Child Info section
+    document.getElementById("parentName").innerText = data.parentName || "---";
+    document.getElementById("studentName").innerText = data.name || "---";
+    document.getElementById("studentBranch").innerText = data.branch || "---";
+    document.getElementById("studentBatch").innerText = data.batch || "---";
+  } else {
+    // If no document exists, you might want to show a default or an error
+    console.error("No data found for this student in Firestore.");
+  }
+}
+
+window.logout = () => { localStorage.clear(); window.location.href="index.html"; };
+</script>
+</body>
+</html>
